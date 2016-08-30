@@ -37,5 +37,6 @@ public class Assignment {
 				break;
 			}
 		} while (menuCorrect);
+		sc.close();
 	}
 }

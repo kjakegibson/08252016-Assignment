@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class DAO {
 	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost:3306/?user=root&autoReconnect=true&useSSL=false";
 	static final String USER = "root";
 	static final String PASSWORD = "root";
@@ -20,11 +21,13 @@ public class DAO {
 	public static void connToDB() {
 		
 		try {
+			Class.forName(JDBC_DRIVER);
+			
 			System.out.println("Trying to connect to the Database...");
 			CONN = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			System.out.println("Connected to the database.");
 			
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println("Failed to conenct to the database.");
 			e.printStackTrace();
 		}
@@ -155,14 +158,12 @@ public class DAO {
 	       connToDB();
 	               
 	       try {
-	           PREP_STMT = CONN.prepareStatement("UPDATE `school`.`animals`SET"
-	                   + " `species` = ?, `name` = ?, `enclosure` = ?, `weight` = ?,"
-	                   + " WHERE `animal_id` = ?;");
+	           PREP_STMT = CONN.prepareStatement(updateTheDatabase);
 	           PREP_STMT.setString(1, animalToUpdate.getSpecies());
 	           PREP_STMT.setString(2, animalToUpdate.getName());
 	           PREP_STMT.setString(3, animalToUpdate.getEnclosure());
 	           PREP_STMT.setDouble(4, animalToUpdate.getWeight());
-	           PREP_STMT.setInt(6, idNumber);
+	           PREP_STMT.setInt(5, idNumber);
 	           
 	           PREP_STMT.executeUpdate();
 	           
@@ -170,7 +171,7 @@ public class DAO {
 	           e.printStackTrace();
 	       }            
 	   }
-	private static String updateTheDatabase
+	private static String updateTheDatabase = ("UPDATE `school`.`animals` SET `species` = ?, `name` = ?, `enclosure` = ?, `weight` = ? WHERE `animalid` = ?");
 	
 }
 	
